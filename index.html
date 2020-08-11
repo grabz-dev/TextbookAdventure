@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Textbook Adventure</title>
+    <meta name="description" content="Description">
+    <meta name="author" content="Grabz">
+
+    <link rel="stylesheet" href="./css/style.css">
+  </head>
+
+  <body>
+    <div class="body-book">
+      <div class="body-book-page left">
+        <div id="bookl">
+          <div class="bookl-content"></div>
+          <div class="bookl-footer">
+            Page <span class="bookl-footer-pagenumber">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="body-book-separator"></div>
+      <div class="body-book-page right">
+        <div id="bookr">
+          <div class="bookr-left">
+            <button id="restart">Start over</button>
+          </div>
+          <div class="bookr-right">
+            <div id="inventory">
+              <div class="inventory-header">Inventory</div>
+              <div class="inventory-content"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

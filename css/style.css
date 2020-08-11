@@ -1,0 +1,151 @@
+body {
+    background-color: black;
+    color: #eeeeee;
+    font-family: Arial;
+
+    position: fixed;
+
+    display: flex;
+    justify-content: center;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    cursor: pointer;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+a[data-page] {
+    color: #00b9b9;
+}
+a[data-page-visited] {
+    color: #763d9d;
+}
+a[data-item] {
+    color: #8bff4a;
+}
+a[data-item-collected] {
+    color: gray;
+}
+a[data-item-collected]:hover {
+    text-decoration: unset;
+    cursor: unset;
+}
+a[data-item-error] {
+    color: red;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+p:first-child {
+    margin-top: 0;
+}
+p:last-child {
+    margin-bottom: 0;
+}
+
+
+
+.body-book {
+    flex: 0 1 120vh;
+
+    display: flex;
+    flex-flow: row nowrap;
+
+    margin: 4vw;
+    height: calc(100% - 10vw);
+    box-shadow: 1vw 1vw 0 0 #480303;
+
+    perspective: 1920px;
+}
+
+.body-book-page {
+    flex: 0 1 100%;
+
+    height: 100%;
+    background: #111111;
+}
+.left.body-book-page {
+    background: linear-gradient(90deg, #111111 0%, #222222 73%, #111111 100%); 
+}
+.right.body-book-page {
+    background: linear-gradient(-90deg, #111111 0%, #222222 73%, #111111 100%); 
+}
+.body-book-separator {
+    height: 100%;
+    flex: 0 0 1vw;
+    background: #0f0f0f;
+}
+
+
+
+
+#bookl {
+    display: flex;
+    flex-flow: column nowrap;
+
+    width: calc(100% - 2vw);
+    height: calc(100% - 2vw);
+    margin-left: 1vw;
+    margin-top: 1vw;
+}
+.bookl-content {
+    flex: 0 1 100%;
+    overflow-y: auto;
+    margin-bottom: 1vw;
+}
+.bookl-footer {
+    flex: 1 0 auto;
+}
+
+
+
+
+
+#bookr {
+    display: flex;
+    flex-flow: row nowrap;
+
+    width: calc(100% - 2vw);
+    height: calc(100% - 2vw);
+    margin-left: 1vw;
+    margin-top: 1vw;
+}
+.bookr-left {
+    flex: 0 0 70%;
+}
+.bookr-right {
+    
+    flex: 0 0 30%;
+
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+
+
+
+
+#inventory {
+    flex: 0 0 30%;
+
+    border: 1px solid #eeeeee;
+}
+.inventory-header {
+    border-bottom: 1px solid #eeeeee;
+    text-align: center;
+}
+.inventory-content-item {
+    margin: 4px;
+    line-height: 14px;
+}
