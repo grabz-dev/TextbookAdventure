@@ -37,7 +37,7 @@ export default class VItems extends View {
      * @param {number} page 
      */
     async switchPage(page) {
-        let response = await fetch(`/src/Data/book/${page}.html`);
+        let response = await fetch(`./src/Data/book/${page}.html`);
         if(!response.ok) {
             console.error('HTTP-Error: ' + response.status);
             return;
