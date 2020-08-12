@@ -2,6 +2,9 @@
 /** @typedef {import('./../Model/MItem.js').default} MItem */
 
 import View from './../View.js';
+import Utility from './../../Utility/Utility.js';
+
+import Parser from './VBook/Parser.js';
 
 export default class VItems extends View {
     /**
@@ -22,6 +25,8 @@ export default class VItems extends View {
         /** @type {Map<MItem, HTMLElement>} */
         this.inventory = new Map();
 
+        this.parser = new Parser(this.game);
+
         this.elems.restart.addEventListener('click', () => this.game.controller.cBook.restart());
     }
 
@@ -37,7 +42,13 @@ export default class VItems extends View {
      * @param {number} page 
      */
     async switchPage(page) {
-        let response = await fetch(`./src/Data/book/${page}.html`);
+        let pResp = fetch(`./src/Data/book/${page}.html`);
+
+        this.elems.bookl.style.transition = 'opacity 200ms';
+        this.elems.bookl.style.opacity = '0';
+        await Utility.Promise.event(this.elems.bookl, 'transitionend');
+
+        let response = await pResp;
         if(!response.ok) {
             console.error('HTTP-Error: ' + response.status);
             return;
@@ -48,16 +59,22 @@ export default class VItems extends View {
         let div = document.createElement('div');
         div.innerHTML = text;
 
-        this.process(div);
-
         for(let elem of this.elems.bookl.querySelectorAll('.bookl-content')) {
             elem.innerHTML = '';
-            elem.appendChild(div);
         }
+
+        this.parser.execute(this.elems.bookl.querySelectorAll('.bookl-content')[0], div);
+        let pParse = this.parser.postExecute(this.elems.bookl.querySelectorAll('.bookl-content')[0]);
 
         for(let elem of this.elems.bookl.querySelectorAll('.bookl-footer-pagenumber')) {
             elem.textContent = page+'';
         }
+
+        this.elems.bookl.style.transition = 'opacity 700ms';
+        this.elems.bookl.style.opacity = '1';
+        await Utility.Promise.event(this.elems.bookl, 'transitionend');
+
+        await pParse;
     }
 
     /**
@@ -76,67 +93,83 @@ export default class VItems extends View {
 
         tItem.textContent = `${item.count}x ${item.name}`;
     }
-
-    /**
-     * 
-     * @param {HTMLElement} elem 
-     */
-    process(elem) {
-        for(let child of elem.children) {
-            if(child.nodeName === 'A') {
-                for(let name of child.getAttributeNames()) {
-                    switch(name) {
-                    case 'data-page': {
-                        let page = child.getAttribute('data-page');
-                        if(Number(page) > 0) {
-                            child.textContent = `[Page ${page}] ` + child.textContent;
-                            child.addEventListener('click', () => this.game.controller.cBook.switchPage(Number(page)));
-                            if(this.save.book.visited[Number(page)])
-                                child.setAttribute('data-page-visited', '');
-                        }
-                        break;
-                    }
-                    case 'data-item': {
-                        let internal = child.getAttribute('data-item');
-                        let id = child.getAttribute('data-item-id');
-                        let name = child.getAttribute('data-item-name');
-                        let description = child.getAttribute('data-item-description');
-                        let collected = child.getAttribute('data-item-collected');
-
-                        let count = Number(child.getAttribute('data-item-count'));
-                        if(!(count > 0))
-                            count = 1;
-                        if(description == null)
-                            description = '';
+}
 
 
-                        if(internal == null) break;
-                        
-                        if(collected || this.game.controller.cBook.hasPickedUpItem(internal, this.save.book.page, id)) {
-                            child.setAttribute('data-item-collected', '');
-                        }
-                        else {
-                            child.addEventListener('click', ((internal) => {
-                                return async () => {
-                                    this.game.controller.cBook.addItem(internal, this.save.book.page, id, count, name, description);
-                                    await this.switchPage(this.save.book.page);
-                                };
-                            })(internal));
-                        }
+
+
+/*
+for(let name of elem.getAttributeNames()) {
+    if(elem.nodeName === 'A') {
+        switch(name) {
+        case 'data-page': {
+            let page = elem.getAttribute('data-page');
+            if(Number(page) > 0) {
+                elem.textContent = `[Page ${page}] ` + elem.textContent;
+                elem.addEventListener('click', () => this.game.controller.cBook.switchPage(Number(page)));
+                if(this.save.book.visited[Number(page)])
+                    elem.setAttribute('data-page-visited', '');
+            }
+            break;
+        }
+        case 'data-item': {
+            let internal = elem.getAttribute('data-item');
+            let id = elem.getAttribute('data-item-id');
+            let name = elem.getAttribute('data-item-name');
+            let description = elem.getAttribute('data-item-description');
+            let collected = elem.getAttribute('data-item-collected');
+
+            let count = Number(elem.getAttribute('data-item-count'));
+            if(!(count > 0))
+                count = 1;
+            if(description == null)
+                description = '';
+
+
+            if(internal == null) break;
             
-                        break;
-                    }
-                    }
-                }
-                
+            if(collected || this.game.controller.cBook.hasPickedUpItem(internal, this.save.book.page, id)) {
+                elem.setAttribute('data-item-collected', '');
+            }
+            else {
+                elem.addEventListener('click', ((internal) => {
+                    return async () => {
+                        this.game.controller.cBook.addItem(internal, this.save.book.page, id, count, name, description);
+                        await this._process(elem);
+                    };
+                })(internal));
             }
 
-
-
-
-            
-            if(child instanceof HTMLElement)
-                this.process(child);
+            break;
+        }
         }
     }
+
+    switch(name) {
+    case 'data-anim': {
+        let internal = elem.getAttribute('data-anim');
+        
+        switch(internal) {
+        case 'spell': {
+            let spellSpeed = Number(elem.getAttribute('data-anim-spell-speed'));
+            spellSpeed = 1 / spellSpeed * 1000;
+            if(spellSpeed <= 0)
+                spellSpeed = 3000;
+            
+            let text = elem.textContent ?? '';
+            elem.textContent = '';
+            for(let i = 0; i < text.length; i++) {
+                elem.textContent += text[i];
+                await Utility.Promise.sleep(spellSpeed);
+            }
+
+            break;
+        }
+        }
+
+
+        break;
+    }
+    }
 }
+        */

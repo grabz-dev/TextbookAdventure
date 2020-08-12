@@ -1,4 +1,30 @@
 class Utility {}
+Utility.Promise = {};
+
+/**
+ * 
+ * @param {number} ms 
+ * @returns {Promise<void>}
+ */
+Utility.Promise.sleep = function(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+/**
+ * 
+ * @param {HTMLElement} elem
+ * @param {string} event
+ */
+Utility.Promise.event = function(elem, event) {
+    return new Promise(resolve => {
+        let listener = () => {
+            elem.removeEventListener(event, listener);
+            resolve();
+        };
+
+        elem.addEventListener(event, listener);
+    });
+};
 
 /**
  * 
