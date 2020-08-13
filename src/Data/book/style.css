@@ -1,0 +1,45 @@
+body {
+    color: #eeeeee;
+    font-family: Arial;
+}
+
+p:first-of-type {
+    margin-top: 0;
+}
+
+a {
+    cursor: pointer;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+.block {
+    display: block;
+}
+
+[data-page] {
+    color: #00b9b9;
+}
+[data-page-visited] {
+    color: #763d9d;
+}
+[data-item] {
+    color: #8bff4a;
+}
+[data-item-collected] {
+    color: gray;
+}
+[data-item-collected]:hover {
+    text-decoration: unset;
+    cursor: unset;
+}
+[data-item-error] {
+    color: red;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+[data-hidden="1"] {
+    display: none;
+}

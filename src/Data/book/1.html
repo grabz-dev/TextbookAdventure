@@ -1,3 +1,5 @@
+<div data-entry="wokeup" data-entry-value=""></div>
+
 <p>
 You wake up in a bed of a dimly lit room. You don't remember how you got here. A quick peek through the windows behind you indicate that you are inside of an apartment building, on a high up floor. It's dark outside and you can't see much of anything.
 </p>
@@ -6,9 +8,9 @@ You wake up in a bed of a dimly lit room. You don't remember how you got here. A
 Looks like you're in a bedroom. You see two large cupboards - one against the wall to your left and one on the opposite wall, which also houses a TV. There's a door on the far end of the left wall. 
 </p>
 
-<a data-page=2>Look through the left cupboard.</a><br>
-<a data-page=3>Look through the opposite wall cupboard.</a>
-
-<p data-anim="spell" data-anim-delay=5 data-anim-spell-speed=6 data-anim-postaction="delete">
-You see nothing. Not this <a data-item="hammer" data-item-name="Hammer">hammer</a>, not anything.
-</p>
+<a class="block" data-page=2>Look through the left cupboard.</a>
+<a class="block" data-page=3>Look through the opposite wall cupboard.</a>
+<a class="block" data-page=4 data-hidden=0 data-has-entry="tv:data-hidden=1">Investigate the TV.</a>
+<a class="block" data-page=5 data-hidden=1 data-has-entry="tv=off:data-hidden=0">Turn on the TV.</a>
+<a class="block" data-page=6 data-hidden=1 data-has-entry="tv=on:data-hidden=0">Turn off the TV.</a>
+<a class="block" data-page=7>Walk through the door on the left.</a>

@@ -10,10 +10,11 @@ export default class EntryPointView {
      * @param {EntryPointDOM} elems 
      */
     constructor(game, elems) {
-        this.vBook = new VBook(game, 0, {
+        this.vBook = new VBook(game, {
             bookl: elems.all.bookl,
             bookr: elems.all.bookr,
             inventory: elems.all.inventory,
+            journal: elems.all.journal,
             restart: elems.all.restart,
         });
     }

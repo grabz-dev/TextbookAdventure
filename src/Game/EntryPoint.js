@@ -15,10 +15,5 @@ export default class EntryPoint {
         this.view = new EntryPointView(this, dom);
         this.controller = new EntryPointController(this);
         this.template = new EntryPointTemplate();
-
-        document.addEventListener('mousemove', e => {
-            this.model.data.mouse.x = e.x;
-            this.model.data.mouse.y = e.y;
-        });
     }
 } 

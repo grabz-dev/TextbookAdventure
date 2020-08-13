@@ -1,4 +1,5 @@
 import TItem from './../Template/TItem.js';
+import TEntry from './../Template/TEntry.js';
 
 export default class EntryPointTemplate {
     /**
@@ -7,9 +8,11 @@ export default class EntryPointTemplate {
     constructor() {
         const template = {
             tItem: GetHTMLElementFromString(TItem),
+            tEntry: GetHTMLElementFromString(TEntry),
         };
 
         this.tItem = () => /** @type {HTMLElement} */(template.tItem.cloneNode(true));
+        this.tEntry = () => /** @type {HTMLElement} */(template.tEntry.cloneNode(true));
     }
 }
 

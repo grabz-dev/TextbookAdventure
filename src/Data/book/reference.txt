@@ -1,0 +1,12 @@
+<p data-hidden=1 data-event-1="data-hidden=0">test</p>
+<p data-hidden=1 data-has-item="hammer:data-hidden=0">You think picking this up will save you? Think again.</p>
+
+<p data-anim="spell" data-anim-speed=18 data-anim-postaction="delete" data-anim-event-end="1">
+You see nothing. Not this <a data-item="hammer">hammer</a>, not anything.
+</p>
+
+<p data-entry="tv" data-entry-value="on">
+You feel a looming presence...
+</p>
+
+<p data-hidden=1 data-has-entry="tv=on:data-hidden=0">Behind you?</p>

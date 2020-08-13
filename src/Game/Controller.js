@@ -11,16 +11,13 @@ class Controller {
         this.data = game.model.data;
     }
     
-    awake() {
+    async awake() {
 
     }
 
-    start() {
+    async start() {
         
     }
 }
-
-/** @type {null|((frameTime: number) => void)} */
-Controller.prototype.update = null;
 
 export default Controller;

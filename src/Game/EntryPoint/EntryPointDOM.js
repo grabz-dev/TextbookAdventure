@@ -4,6 +4,7 @@ export default class EntryPointElems {
             bookl: /** @type {HTMLElement} */(document.getElementById('bookl')),
             bookr: /** @type {HTMLElement} */(document.getElementById('bookr')),
             inventory: /** @type {HTMLElement} */(document.getElementById('inventory')),
+            journal: /** @type {HTMLElement} */(document.getElementById('journal')),
             restart: /** @type {HTMLElement} */(document.getElementById('restart')),
         };
 

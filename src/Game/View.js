@@ -4,33 +4,17 @@ class View {
     /**
      * 
      * @param {Game.EntryPoint} game
-     * @param {number} updateInterval
      */
-    constructor(game, updateInterval) {
+    constructor(game) {
         this.game = game;
         this.save = game.model.save;
         this.data = game.model.data;
+    }
+
+    init() {
         
-        this.paused = false;
-        this.updateInterval = updateInterval;
-        this.updateClock = updateInterval;
-    }
-
-    resume() {
-
-    }
-
-    pause() {
-        this.paused = true;
-    }
-    unpause() {
-        this.paused = false;
-        this.resume();
     }
 }
-
-/** @type {null|(() => void)} */
-View.prototype.update = null;
 
 /** @type {null|((e: MouseEvent) => void)} */
 View.prototype.onClick = null;

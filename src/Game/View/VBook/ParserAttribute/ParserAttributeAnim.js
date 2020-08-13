@@ -13,7 +13,7 @@ export default class ParserAttributeAnim extends ParserAttribute {
     }
 
     /**
-     * @param {Element} elem
+     * @param {HTMLElement} elem
      */
     awake(elem) {
         super.awake(elem);
@@ -21,25 +21,34 @@ export default class ParserAttributeAnim extends ParserAttribute {
 
     /**
      * 
-     * @param {Element} elem 
+     * @param {HTMLElement} elem 
      */
     async start(elem) {
-        super.start(elem);
+        await super.start(elem);
 
-        let internal = elem.getAttribute('data-anim');
-        let delay = elem.getAttribute('data-anim-delay');
-        let postAction = elem.getAttribute('data-anim-postaction');
+        let internal = elem.dataset.anim;
+        let speed = Number(elem.dataset.animSpeed);
+        let delay = Number(elem.dataset.animDelay);
+        let postaction = elem.dataset.animPostaction;
+        let eventEnd = elem.dataset.animEventEnd;
+
+        if(!Number.isFinite(delay) || delay < 0)
+            delay = 0;
+        
+        speed = 1 / speed * 1000;
+        if(speed <= 0)
+            speed = 3000;
 
         switch(internal) {
         case 'spell': {
-            let spellSpeed = Number(elem.getAttribute('data-anim-spell-speed'));
-            spellSpeed = 1 / spellSpeed * 1000;
-            if(spellSpeed <= 0)
-                spellSpeed = 3000;
+            let arr = scoopTextRecursively([], elem);
+            if(delay > 0) await Utility.Promise.sleep(delay * 1000);
+            await parseTextRecursively(arr, elem, speed);
 
-            await parseTextRecursively(scoopTextRecursively([], elem), elem, spellSpeed);
-
-            if(postAction === 'delete') elem.remove();
+            if(postaction === 'delete') elem.remove();
+            
+            if(eventEnd != null)
+                this.emit('end', eventEnd);
 
             break;
         }

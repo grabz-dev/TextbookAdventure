@@ -1,17 +1,20 @@
 /** @typedef {import('./../../EntryPoint.js').default} Game.EntryPoint */
 
-export default class ParserAttribute {
+import EventEmitter from '../../../Utility/EventEmitter.js';
+
+export default class ParserAttribute extends EventEmitter {
     /**
      * 
      * @param {Game.EntryPoint} game 
      */
     constructor(game) {
+        super();
         this.game = game;
     }
 
     /**
      * 
-     * @param {Element} elem
+     * @param {HTMLElement} elem
      */
     awake(elem) {
 
@@ -19,7 +22,7 @@ export default class ParserAttribute {
 
     /**
      * 
-     * @param {Element} elem
+     * @param {HTMLElement} elem
      */
     async start(elem) {
 

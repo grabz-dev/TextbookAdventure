@@ -18,43 +18,9 @@ body {
     padding: 0;
 }
 
-a {
-    cursor: pointer;
+iframe {
+    border: 0;
 }
-a:hover {
-    text-decoration: underline;
-}
-
-a[data-page] {
-    color: #00b9b9;
-}
-a[data-page-visited] {
-    color: #763d9d;
-}
-a[data-item] {
-    color: #8bff4a;
-}
-a[data-item-collected] {
-    color: gray;
-}
-a[data-item-collected]:hover {
-    text-decoration: unset;
-    cursor: unset;
-}
-a[data-item-error] {
-    color: red;
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-p:first-child {
-    margin-top: 0;
-}
-p:last-child {
-    margin-bottom: 0;
-}
-
-
 
 .body-book {
     flex: 0 1 120vh;
@@ -123,6 +89,9 @@ p:last-child {
 }
 .bookr-left {
     flex: 0 0 70%;
+
+    display: flex;
+    flex-flow: column nowrap;
 }
 .bookr-right {
     
@@ -136,16 +105,16 @@ p:last-child {
 
 
 
-#inventory {
+#inventory, #journal {
     flex: 0 0 30%;
 
     border: 1px solid #eeeeee;
 }
-.inventory-header {
+.inventory-header, .journal-header {
     border-bottom: 1px solid #eeeeee;
     text-align: center;
 }
-.inventory-content-item {
+.inventory-content-item, .journal-content-entry {
     margin: 4px;
     line-height: 14px;
 }

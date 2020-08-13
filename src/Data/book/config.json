@@ -1,0 +1,21 @@
+{
+    "items": {
+        "key1": {
+            "name": "Small metal key",
+            "description": "Looks like it would fit in a regular door lock."
+        }
+    },
+    "entries": {
+        "wokeup": {
+            "values": {
+                "": "You woke up in a strange home."
+            }
+        },
+        "tv": {
+            "values": {
+                "on": "You flicked the TV on. The screen is grainy and makes a faint static noise.",
+                "off": "You decided it's best to keep the TV off."
+            }
+        }
+    }
+}

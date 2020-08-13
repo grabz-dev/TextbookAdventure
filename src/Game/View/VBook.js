@@ -10,24 +10,60 @@ export default class VItems extends View {
     /**
      * 
      * @param {Game.EntryPoint} game 
-     * @param {number} updateInterval
      * @param {{
         bookl: HTMLElement,
         bookr: HTMLElement,
         inventory: HTMLElement,
+        journal: HTMLElement,
         restart: HTMLElement
     }} elems
      */
-    constructor(game, updateInterval, elems) {
-        super(game, updateInterval);
+    constructor(game, elems) {
+        super(game);
         this.elems = elems;
 
-        /** @type {Map<MItem, HTMLElement>} */
+        /** @type {Map<string, HTMLElement>} */
         this.inventory = new Map();
+        /** @type {Map<string, HTMLElement>} */
+        this.journal = new Map();
 
-        this.parser = new Parser(this.game);
+        let content = this.elems.bookl.querySelector('iframe.bookl-content');
+        if(!(content instanceof HTMLIFrameElement))
+            throw new Error();
+        if(!content.contentDocument)
+            throw new Error();
+        
+        let head = content.contentDocument.head;
+        head.innerHTML = '<link rel="stylesheet" href="./src/Data/book/style.css">';
+        this.root = content.contentDocument.body;
+
+        this.parser = new Parser(this.game, this.root);
 
         this.elems.restart.addEventListener('click', () => this.game.controller.cBook.restart());
+    }
+
+    init() {
+        //TODO textcontent repeated
+
+        for(let key of Object.keys(this.save.book.items)) {
+            let item = this.save.book.items[key];
+            let tItem = this.game.template.tItem();
+            for(let elem of this.elems.inventory.querySelectorAll('.inventory-content')) {
+                elem.appendChild(tItem);
+            }
+            this.inventory.set(key, tItem);
+            tItem.textContent = `${item.count}x ${this.data.book.items[key]?.name}`;
+        }
+
+        for(let key of Object.keys(this.save.book.entries)) {
+            let entry = this.save.book.entries[key];
+            let tEntry = this.game.template.tEntry();
+            for(let elem of this.elems.journal.querySelectorAll('.journal-content')) {
+                elem.appendChild(tEntry);
+            }
+            this.journal.set(key, tEntry);
+            tEntry.textContent = `${this.data.book.entries[key]?.values[entry.value]}`;
+        }
     }
 
     restart() {
@@ -35,6 +71,11 @@ export default class VItems extends View {
             elem.remove();
         }
         this.inventory.clear();
+
+        for(let elem of this.journal.values()) {
+            elem.remove();
+        }
+        this.journal.clear();
     }
 
     /**
@@ -59,12 +100,10 @@ export default class VItems extends View {
         let div = document.createElement('div');
         div.innerHTML = text;
 
-        for(let elem of this.elems.bookl.querySelectorAll('.bookl-content')) {
-            elem.innerHTML = '';
-        }
+        this.root.innerHTML = '';
 
-        this.parser.execute(this.elems.bookl.querySelectorAll('.bookl-content')[0], div);
-        let pParse = this.parser.postExecute(this.elems.bookl.querySelectorAll('.bookl-content')[0]);
+        this.parser.execute(div);
+        let pParse = this.parser.postExecute();
 
         for(let elem of this.elems.bookl.querySelectorAll('.bookl-footer-pagenumber')) {
             elem.textContent = page+'';
@@ -79,97 +118,39 @@ export default class VItems extends View {
 
     /**
      * 
-     * @param {MItem} item 
+     * @param {string} key 
      */
-    addItem(item) {
-        let tItem = this.inventory.get(item);
+    addItem(key) {
+        let item = this.save.book.items[key];
+        let tItem = this.inventory.get(key);
         if(tItem == null) {
             tItem = this.game.template.tItem();
             for(let elem of this.elems.inventory.querySelectorAll('.inventory-content')) {
                 elem.appendChild(tItem);
             }
-            this.inventory.set(item, tItem);
+            this.inventory.set(key, tItem);
         }
 
-        tItem.textContent = `${item.count}x ${item.name}`;
+        tItem.textContent = `${item.count}x ${this.data.book.items[key]?.name}`;
+        this.parser.refreshItems();
+    }
+
+    /**
+     * 
+     * @param {string} key 
+     */
+    addEntry(key) {
+        let entry = this.save.book.entries[key];
+        let tEntry = this.journal.get(key);
+        if(tEntry == null) {
+            tEntry = this.game.template.tEntry();
+            for(let elem of this.elems.journal.querySelectorAll('.journal-content')) {
+                elem.appendChild(tEntry);
+            }
+            this.journal.set(key, tEntry);
+        }
+
+        tEntry.textContent = `${this.data.book.entries[key]?.values[entry.value]}`;
+        this.parser.refreshEntries();
     }
 }
-
-
-
-
-/*
-for(let name of elem.getAttributeNames()) {
-    if(elem.nodeName === 'A') {
-        switch(name) {
-        case 'data-page': {
-            let page = elem.getAttribute('data-page');
-            if(Number(page) > 0) {
-                elem.textContent = `[Page ${page}] ` + elem.textContent;
-                elem.addEventListener('click', () => this.game.controller.cBook.switchPage(Number(page)));
-                if(this.save.book.visited[Number(page)])
-                    elem.setAttribute('data-page-visited', '');
-            }
-            break;
-        }
-        case 'data-item': {
-            let internal = elem.getAttribute('data-item');
-            let id = elem.getAttribute('data-item-id');
-            let name = elem.getAttribute('data-item-name');
-            let description = elem.getAttribute('data-item-description');
-            let collected = elem.getAttribute('data-item-collected');
-
-            let count = Number(elem.getAttribute('data-item-count'));
-            if(!(count > 0))
-                count = 1;
-            if(description == null)
-                description = '';
-
-
-            if(internal == null) break;
-            
-            if(collected || this.game.controller.cBook.hasPickedUpItem(internal, this.save.book.page, id)) {
-                elem.setAttribute('data-item-collected', '');
-            }
-            else {
-                elem.addEventListener('click', ((internal) => {
-                    return async () => {
-                        this.game.controller.cBook.addItem(internal, this.save.book.page, id, count, name, description);
-                        await this._process(elem);
-                    };
-                })(internal));
-            }
-
-            break;
-        }
-        }
-    }
-
-    switch(name) {
-    case 'data-anim': {
-        let internal = elem.getAttribute('data-anim');
-        
-        switch(internal) {
-        case 'spell': {
-            let spellSpeed = Number(elem.getAttribute('data-anim-spell-speed'));
-            spellSpeed = 1 / spellSpeed * 1000;
-            if(spellSpeed <= 0)
-                spellSpeed = 3000;
-            
-            let text = elem.textContent ?? '';
-            elem.textContent = '';
-            for(let i = 0; i < text.length; i++) {
-                elem.textContent += text[i];
-                await Utility.Promise.sleep(spellSpeed);
-            }
-
-            break;
-        }
-        }
-
-
-        break;
-    }
-    }
-}
-        */

@@ -1,4 +1,5 @@
 /** @typedef {import('./../Model/MItem.js').default} MItem */
+/** @typedef {import('./../Model/MEntry.js').default} MEntry */
 
 export default class EntryPointModel {
     constructor() {
@@ -9,16 +10,17 @@ export default class EntryPointModel {
 
             book: {
                 page: 0,
-                inventory: /** @type {Object.<string, MItem>} */({}),
+                items: /** @type {Object.<string, MItem>} */({}),
+                entries: /** @type {Object.<string, MEntry>} */({}),
                 visited: /** @type {boolean[]} */([]),
             }
         };
 
         this.data = {
-            mouse: {
-                x: 0,
-                y: 0
-            },
+            book: {
+                items: /** @type {Object.<string, { name: string, description: string }>} */({}),
+                entries: /** @type {Object.<string, { values: Object.<string, string> }>} */({})
+            }
         };
 
         this.save.timestamp = Date.now();

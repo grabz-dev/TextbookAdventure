@@ -12,18 +12,18 @@ export default class ParserAttributePage extends ParserAttribute {
     }
 
     /**
-     * @param {Element} elem
+     * @param {HTMLElement} elem
      */
-    awake(elem) {
-        super.awake(elem);
+    async start(elem) {
+        await super.start(elem);
 
-        let page = Number(elem.getAttribute('data-page'));
+        let page = Number(elem.dataset.page);
         if(!Number.isFinite(page) || page <= 0)
             page = 1;
 
-        elem.textContent = `[Page ${page}] ` + elem.textContent;
+        elem.textContent = elem.textContent + ` (Page ${page})`;
         elem.addEventListener('click', () => this.game.controller.cBook.switchPage(page));
         if(this.game.model.save.book.visited[page])
-            elem.setAttribute('data-page-visited', '');
+            elem.dataset.pageVisited = '';
     }
 }

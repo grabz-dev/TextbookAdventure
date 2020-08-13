@@ -4,21 +4,10 @@ import Model from './../Model.js';
 
 export default class MItem extends Model {
     /**
-     * @param {string} internal
-     * @param {number} page
-     * @param {string|null} id
-     * @param {string|null} name
-     * @param {string|null} description
      * @param {string=} _path
      */
-    constructor(internal, page, id, name, description, _path) {
+    constructor(_path) {
         super(_path ?? 'MItem.js');
-
-        this.internal = internal;
-        this.page = page;
-        this.id = id;
-        this.name = name ?? internal;
-        this.description = description ?? '';
 
         this.count = 0;
         this.locations = /** @type {MItemLocation[]} */([]);
@@ -29,11 +18,8 @@ export default class MItem extends Model {
      */
     serialize() {
         return Object.assign(super.serialize(), {
-            internal: this.internal,
-            page: this.page,
-            id: this.id,
-            name: this.name,
-            description: this.description
+            count: this.count,
+            locations: this.locations
         });
     }
 
@@ -41,10 +27,7 @@ export default class MItem extends Model {
      * @param {any} obj 
      */
     deserialize(obj) {
-        this.internal = obj.internal;
-        this.page = obj.page;
-        this.id = obj.id;
-        this.name = obj.name;
-        this.description = obj.description;
+        this.count = obj.count;
+        this.locations = obj.locations;
     }
 }

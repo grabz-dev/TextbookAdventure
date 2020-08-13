@@ -3,14 +3,14 @@ import Model from './../../Model.js';
 export default class MItemLocation extends Model {
     /**
      * @param {number} page
-     * @param {string|null} id
+     * @param {string=} id
      * @param {string=} _path
      */
     constructor(page, id, _path) {
         super(_path ?? 'MItem/MItemLocation.js');
 
         this.page = page;
-        this.id = id;
+        this.id = id??null;
     }
 
     /**
